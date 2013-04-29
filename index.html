@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chat</title>
+<style>
+#ui-initInput{
+    position: absolute;
+    top:0;
+    left:0;
+}
+</style>
+</head>
+<body>
+
+<div id="ui-initInput">
+<input name="nameInput">
+<input type="radio" name="texture" value="fez1.png" checked="checked">
+<input type="radio" name="texture" value="fez2.png">
+<button id="ui-connect">connect</button>
+</div>
+
+<script src="jquery.js"></script>
+<script src="http://localhost:8080/socket.io/socket.io.js"></script> 
+<script src="three.min.js"></script>
+<script src="cannon.min.js"></script>
+<script src="EventDispatcher.js"></script>
+<script>
+
+var app = app || {};
+app.clock = new THREE.Clock();
+app.player = null;
+app.myData = {
+    id   : '',
+    name : 'unknown',
+    texture  : 'fez1.png',
+    position : [ 0, 0, 0 ],
+    velocity : [ 0, 0, 0 ],
+    angle    : 0,
+    motion   : 'stand',
+    update : function () {
+        if ( !app.player ) {
+            return;
+        }
+        app.myData.position = [
+            app.player.holder.position.x,
+            app.player.holder.position.y,
+            app.player.holder.position.z
+        ];
+        app.myData.velocity = [
+            app.player.velocity.x,
+            app.player.velocity.y,
+            app.player.velocity.z
+        ];
+        app.myData.angle    = app.player.frontAngle;
+        app.myData.motion   = app.player.avatar.motion;
+    }
+};
+app.allPlayersData = {};
+
+</script>
+<script src="DeviceInput.js"></script>
+<script src="Avatar.js"></script>
+<script src="Player.js"></script>
+<script src="TPSCamera.js"></script>
+<script src="init.js"></script>
+<script src="client.js"></script>
+<script src="messageWatch.js"></script>
+<script>
+
+( function () {
+    var $name = $( 'input[name="nameInput"]' );
+    var $texture = $( 'input[name="texture"]' );
+    var $connect = $( '#ui-connect' );
+
+    $connect.on( 'click', function () {
+        app.myData.name = $name.val();
+        app.myData.texture  = $texture.val();
+
+        app.onInit();
+        app.connect();
+    } );
+} )();
+
+
+</script>
+  </body>
+</html>
