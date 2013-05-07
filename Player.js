@@ -13,7 +13,7 @@ var app = app || {};
         this.holder.useQuaternion = true;
 
         this.frontAngle = 0;
-        this.velocity = new THREE.Vector3( 0, -100, 0 );
+        this.velocity = new THREE.Vector3( 0, 0, 0 );
 
         this.lastKeyInputedTime;
 
@@ -78,9 +78,15 @@ var app = app || {};
         // this.motion = 
         this.avatar.visualBody.rotation.y = this.frontAngle;
         this.rotatePlayerObj();
-        this.avatar.physicalBody.velocity.x = this.velocity.x;
-        this.avatar.physicalBody.velocity.y = this.velocity.y;
-        this.avatar.physicalBody.velocity.z = this.velocity.z;
+        // if ( this.velocity.x ) {
+            this.avatar.physicalBody.velocity.x = this.velocity.x;
+        // };
+        // if ( this.velocity.y ) {
+            this.avatar.physicalBody.velocity.y = this.velocity.y;
+        // };
+        if ( this.velocity.z ) {
+            this.avatar.physicalBody.velocity.z = this.velocity.z;
+        };
         // this.holder.quaternion.copy( this.avatar.physicalBody.quaternion );
         this.holder.position.copy( this.avatar.physicalBody.position );
         this.avatar.visualBody.position.copy( this.avatar.physicalBody.position );
@@ -137,11 +143,11 @@ var app = app || {};
         ( function loop () {
             var estimateTime = Date.now() - START_TIME;
             count++;
-            that.velocity.y = 10 * ( ( MAX_COUNT / 2 ) - count );
+            that.velocity.y = 16 * ( ( MAX_COUNT / 2 ) - count );
             if ( count < MAX_COUNT ) {
                 requestAnimationFrame( loop );
             } else {
-                that.velocity.y = 0;
+                that.velocity.y = null;
                 that.avatar.motion = lastMotion;
                 app.DeviceInput.disableMovementKey = false;
             }

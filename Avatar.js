@@ -10,13 +10,14 @@ var app = app || {};
 
         if ( cannonWorld ) {
             this.physicalBody = new CANNON.RigidBody(
-                1000,
+                100,
                 new CANNON.Sphere( PHYSICAL_BODY_HEIGHT )
             );
             this.physicalBody.position.set( 0, 50, 0 );
             this.physicalBody.angularDamping = 1.0;
             cannonWorld.add( this.physicalBody );
         }
+        this.name = name;
         this.texture = texture;
         this.parts = {};
         this.motion = 'stand';
@@ -39,7 +40,37 @@ var app = app || {};
         );
         this.visualBody.add( sphere );
 
-        texture = THREE.ImageUtils.loadTexture( './fez1.png' );
+var canvas = document.createElement('canvas');
+var size = 512; // CHANGED
+canvas.width = size;
+canvas.height = size;
+var ctx = canvas.getContext('2d');
+ctx.font = '24px Arial';
+ctx.textAlign = 'center';
+ctx.strokeStyle = "#000";
+ctx.lineWidth = 3;
+ctx.strokeText( this.name, size / 2, size / 2);
+ctx.fillStyle = '#fff';
+ctx.fillText( this.name, size / 2, size / 2);
+
+var amap = new THREE.Texture(canvas);
+amap.needsUpdate = true;
+
+var mat = new THREE.SpriteMaterial({
+    map: amap,
+    transparent: false,
+    useScreenCoordinates: false,
+    color: 0xffffff // CHANGED
+});
+
+var sp = new THREE.Sprite(mat);
+sp.scale.set( 100, 100, 1 );
+sp.position.set( 0, 26, 0 );
+this.visualBody.add(sp);
+
+
+
+        texture = THREE.ImageUtils.loadTexture( this.texture );
         texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
         texture.magFilter = texture.minFilter = THREE.NearestFilter;
         material = new THREE.MeshBasicMaterial( {
@@ -50,9 +81,9 @@ var app = app || {};
 
         // Left leg
         var leftleggeo = new THREE.CubeGeometry( 4, 12, 4 );
-        for(var i=0; i < 8; i+=1) {
+        for( var i = 0; i < 8; i += 1 ) {
             leftleggeo.vertices[i].y -= 6;
-        }
+        };
         app.Avatar.uvmap( leftleggeo, 0, 12, 20, -4, 12 );
         app.Avatar.uvmap( leftleggeo, 1, 4, 20, -4, 12 );
         app.Avatar.uvmap( leftleggeo, 2, 4, 16, 4, 4, 3 );
@@ -62,13 +93,14 @@ var app = app || {};
         this.parts.leftleg = new THREE.Mesh( leftleggeo, material );
         this.parts.leftleg.position.x = -2;
         this.parts.leftleg.position.y = 12 - PHYSICAL_BODY_HEIGHT;
+        this.parts.leftleg.rotation.y = 180 * Math.PI / 180;
         this.visualBody.add( this.parts.leftleg );
 
         // Right leg
         var rightleggeo = new THREE.CubeGeometry( 4, 12, 4 );
-        for(var i=0; i < 8; i+=1) {
+        for( var i = 0; i < 8; i += 1 ) {
             rightleggeo.vertices[i].y -= 6;
-        }
+        };
         app.Avatar.uvmap( rightleggeo, 0, 0, 20, 4, 12 );
         app.Avatar.uvmap( rightleggeo, 1, 8, 20, 4, 12 );
         app.Avatar.uvmap( rightleggeo, 2, 8, 16, -4, 4, 3 );
@@ -78,6 +110,7 @@ var app = app || {};
         this.parts.rightleg = new THREE.Mesh( rightleggeo, material );
         this.parts.rightleg.position.x = 2;
         this.parts.rightleg.position.y = 12 - PHYSICAL_BODY_HEIGHT;
+        this.parts.rightleg.rotation.y = 180 * Math.PI / 180;
         this.visualBody.add( this.parts.rightleg );
 
         // Body
@@ -90,13 +123,14 @@ var app = app || {};
         app.Avatar.uvmap( bodygeo, 5, 32, 20, 8, 12 );
         this.parts.body = new THREE.Mesh( bodygeo, material );
         this.parts.body.position.y = 18 - PHYSICAL_BODY_HEIGHT;
+        this.parts.body.rotation.y = 180 * Math.PI / 180;
         this.visualBody.add( this.parts.body );
 
         // Left arm
         var leftarmgeo = new THREE.CubeGeometry( 4, 12, 4 );
-        for(var i=0; i < 8; i+=1) {
+        for( var i = 0; i < 8; i += 1 ) {
             leftarmgeo.vertices[i].y -= 4;
-        }
+        };
         app.Avatar.uvmap( leftarmgeo, 0, 52, 20, -4, 12 );
         app.Avatar.uvmap( leftarmgeo, 1, 44, 20, -4, 12 );
         app.Avatar.uvmap( leftarmgeo, 2, 48, 16, -4, 4 );
@@ -106,14 +140,15 @@ var app = app || {};
         this.parts.leftarm = new THREE.Mesh( leftarmgeo, material );
         this.parts.leftarm.position.x = -6;
         this.parts.leftarm.position.y = 22 - PHYSICAL_BODY_HEIGHT;
-        this.parts.leftarm.rotation.z = -Math.PI / 32;
+        this.parts.leftarm.rotation.y = 180 * Math.PI / 180;
+        this.parts.leftarm.rotation.z = Math.PI / 32;
         this.visualBody.add( this.parts.leftarm );
 
         // Right arm
         var rightarmgeo = new THREE.CubeGeometry( 4, 12, 4 );
-        for(var i=0; i < 8; i+=1) {
+        for( var i = 0; i < 8; i += 1 ) {
             rightarmgeo.vertices[i].y -= 4;
-        }
+        };
         app.Avatar.uvmap( rightarmgeo, 0, 40, 20, 4, 12 );
         app.Avatar.uvmap( rightarmgeo, 1, 48, 20, 4, 12 );
         app.Avatar.uvmap( rightarmgeo, 2, 44, 16, 4, 4 );
@@ -123,11 +158,12 @@ var app = app || {};
         this.parts.rightarm = new THREE.Mesh( rightarmgeo, material );
         this.parts.rightarm.position.x = 6;
         this.parts.rightarm.position.y = 22 - PHYSICAL_BODY_HEIGHT;
-        this.parts.rightarm.rotation.z = Math.PI / 32;
+        this.parts.rightarm.rotation.y = 180 * Math.PI / 180;
+        this.parts.rightarm.rotation.z = -Math.PI / 32;
         this.visualBody.add( this.parts.rightarm );
 
         //Head
-        var headgeo = new THREE.CubeGeometry(8, 8, 8);
+        var headgeo = new THREE.CubeGeometry( 8, 8, 8 );
         app.Avatar.uvmap( headgeo, 0, 16, 8, 8, 8 ); // +x
         app.Avatar.uvmap( headgeo, 1, 0, 8, 8, 8 ); // -x
         app.Avatar.uvmap( headgeo, 2, 8, 0, 8, 8 ); // +y
@@ -136,10 +172,11 @@ var app = app || {};
         app.Avatar.uvmap( headgeo, 5, 24, 8, 8, 8 ); // -z
         this.parts.head = new THREE.Mesh( headgeo, material );
         this.parts.head.position.y = 28 - PHYSICAL_BODY_HEIGHT;
+        this.parts.head.rotation.y = 180 * Math.PI / 180;
         this.visualBody.add( this.parts.head );
 
         // Helmet
-        var helmetgeo = new THREE.CubeGeometry(9, 9, 9);
+        var helmetgeo = new THREE.CubeGeometry( 9, 9, 9 );
         app.Avatar.uvmap( helmetgeo, 0, 32 + 16, 8, 8, 8 ); // +x
         app.Avatar.uvmap( helmetgeo, 1, 32 + 0, 8, 8, 8 ); // -x
         app.Avatar.uvmap( helmetgeo, 2, 32 + 8, 0, 8, 8 ); // +y
@@ -149,12 +186,13 @@ var app = app || {};
         this.parts.helmet = new THREE.Mesh( helmetgeo, material );
         this.parts.helmet.doubleSided = true;
         this.parts.helmet.position.y = 28 - PHYSICAL_BODY_HEIGHT;
+        this.parts.helmet.rotation.y = 180 * Math.PI / 180;
         this.visualBody.add( this.parts.helmet );
     };
     
     app.Avatar.prototype.anim = function () {
         if ( this.motion === 'stand' || this.motion === 'jump' ) {
-            this.visualBody.position.y = 0;
+            // this.visualBody.position.y = 0;
             this.parts.rightarm.rotation.x = 0;
             this.parts.leftarm.rotation.x = 0;
             this.parts.rightleg.rotation.x = 0;
@@ -164,16 +202,16 @@ var app = app || {};
 
         if ( this.motion === 'walk' ) {
             var theta = app.clock.getElapsedTime();
-            this.visualBody.position.y = 0;
-            this.parts.rightarm.rotation.x = Math.cos( 0.6662 * theta * 10 + Math.PI);
+            // this.visualBody.position.y = 0;
+            this.parts.rightarm.rotation.x = Math.cos( 0.6662 * theta * 10 + Math.PI );
             this.parts.leftarm.rotation.x = Math.cos( 0.6662 * theta * 10 );
             this.parts.rightleg.rotation.x = Math.cos( 0.6662 * theta * 10 );
-            this.parts.leftleg.rotation.x = Math.cos( 0.6662 * theta * 10 + Math.PI);
+            this.parts.leftleg.rotation.x = Math.cos( 0.6662 * theta * 10 + Math.PI );
             return;
         };
 
         if ( this.motion === 'crouch' ) {
-            this.visualBody.position.y = -10;
+            // this.visualBody.position.y = -10;
             this.parts.rightarm.rotation.x = 0;
             this.parts.leftarm.rotation.x = 0;
             this.parts.rightleg.rotation.x = -90 * Math.PI / 180;
@@ -196,6 +234,25 @@ var app = app || {};
         uvs[ 2 % 4 ].y = 1 - ( tileV * tileUvHeight + h * tileUvHeight );
         uvs[ 3 % 4 ].x = tileU * tileUvWidth + w * tileUvWidth;
         uvs[ 3 % 4 ].y = 1 - ( tileV * tileUvHeight );
+    };
+
+    app.Avatar.nameTexture = function ( text ) {
+        var canvas = document.createElement( 'canvas' );
+        canvas.width = 512;
+        canvas.height = 512;
+
+        var ctx = canvas.getContext( '2d' );
+        ctx.font = 'normal 24px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.strokeStyle = "#000";
+        ctx.lineWidth = 3;
+        ctx.strokeText( text, canvas.width / 2, 24, canvas.width );
+        ctx.fillStyle = '#fff';
+        ctx.fillText( text, canvas.width / 2, 24, canvas.width );
+
+        var texture = new THREE.Texture( canvas );
+        texture.needsUpdate = true;
+        return texture;
     };
 
 } )();

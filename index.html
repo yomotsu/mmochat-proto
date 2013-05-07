@@ -13,9 +13,9 @@
 <body>
 
 <div id="ui-initInput">
-<input name="nameInput">
+<input name="nameInput" value="unknown">
 <input type="radio" name="texture" value="fez1.png" checked="checked">
-<input type="radio" name="texture" value="fez2.png">
+<input type="radio" name="texture" value="fez_phantom.png">
 <button id="ui-connect">connect</button>
 </div>
 
@@ -55,7 +55,7 @@ app.myData = {
         app.myData.motion   = app.player.avatar.motion;
     }
 };
-app.allPlayersData = {};
+// app.allPlayersData = {};
 
 </script>
 <script src="DeviceInput.js"></script>
@@ -64,7 +64,7 @@ app.allPlayersData = {};
 <script src="TPSCamera.js"></script>
 <script src="init.js"></script>
 <script src="client.js"></script>
-<script src="messageWatch.js"></script>
+<script src="watchOtherPlayers.js"></script>
 <script>
 
 ( function () {

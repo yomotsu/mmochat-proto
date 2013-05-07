@@ -13,7 +13,10 @@ app.onInit = function () {
     initThreeScene();
     initCannonWorld();
     addGround( new THREE.Vector3( 0, 0, 0 ) );
-    var playerAvator = new app.Avatar( './fez1.png', 'player1', scene, world );
+
+    var name = $( 'input[name="nameInput"]' ).val();
+    var texture = $( 'input[name="texture"]:checked' ).val();
+    var playerAvator = new app.Avatar( texture, name, scene, world );
     app.player = new app.Player( playerAvator );
     var tpsCamera = new app.TPSCamera(
         app.player,
@@ -28,6 +31,7 @@ app.onInit = function () {
         app.player.update();
         tpsCamera.update();
         app.myData.update();
+        app.playersData.update();
         renderer.render( scene, camera );
     } )();
 }
@@ -45,14 +49,14 @@ function initThreeScene () {
     dirLight.position.set( 10, 50, 50 );
     scene.add( dirLight );
 
-    var dirLight2 = new THREE.DirectionalLight( 0xffffff, .5 );
-    dirLight2.position.set( -10, 50, -50 );
-    scene.add( dirLight2 );
+    // var dirLight2 = new THREE.DirectionalLight( 0xffffff, .5 );
+    // dirLight2.position.set( -10, 50, -50 );
+    // scene.add( dirLight2 );
 
-    var spotLight = new THREE.SpotLight( 0xffffff, 1.5 );
-    spotLight.position.set( 50, 50, 50 );
-    spotLight.target.position.set( 0, 0, 0 );
-    scene.add( spotLight );
+    // var spotLight = new THREE.SpotLight( 0xffffff, 1.5 );
+    // spotLight.position.set( 50, 50, 50 );
+    // spotLight.target.position.set( 0, 0, 0 );
+    // scene.add( spotLight );
 
     var helper1 = new THREE.AxisHelper( 150 );
     scene.add( helper1 );
@@ -68,15 +72,11 @@ function initCannonWorld () {
     world.broadphase = new CANNON.NaiveBroadphase();
     world.iterations = 10;
     // world.gravity.set( 0, 0, 0 );
-    world.gravity.set( 0, -100, 0 );
+    world.gravity.set( 0, -3000, 0 );
 };
 
 
-function addGround ( offsetVec3 ) {
-    var x = offsetVec3.x;
-    var y = offsetVec3.y;
-    var z = offsetVec3.z;
-
+function addGround () {
     //three --
     // var material = new THREE.MeshLambertMaterial( {
     //     map: THREE.ImageUtils.loadTexture( './ground/bg.jpg' ),
@@ -87,7 +87,7 @@ function addGround ( offsetVec3 ) {
     // material.map.wrapT = THREE.RepeatWrapping;
     var ground = new THREE.Mesh(
         new THREE.PlaneGeometry( 1000,1000 ),
-        new THREE.MeshNormalMaterial()// material
+        new THREE.MeshNormalMaterial()
     );
     ground.rotation.x = Math.PI / -2;
     ground.castShadow = false;
@@ -105,4 +105,25 @@ function addGround ( offsetVec3 ) {
     // add
     scene.add( ground );
     world.add( groundBody );
+
+    // ----box
+    //three
+    var boxSize = [ 50, 20, 50 ];
+    var boxPos = [ 0, 0, 0 ];
+    var box = new THREE.Mesh(
+        new THREE.CubeGeometry( boxSize[ 0 ], boxSize[ 1 ], boxSize[ 2 ] ),
+        new THREE.MeshNormalMaterial()
+    );
+    box.position.set( boxPos[ 0 ], boxPos[ 1 ], boxPos[ 2 ] );
+
+    //cannon
+    var boxBody = new CANNON.RigidBody(
+        0,
+        new CANNON.Box( new CANNON.Vec3( boxSize[ 0 ] / 2, boxSize[ 1 ] / 2, boxSize[ 2 ] / 2 ) )
+    );
+    boxBody.position.set( boxPos[ 0 ], boxPos[ 1 ], boxPos[ 2 ] );
+
+    // add
+    scene.add( box );
+    world.add( boxBody );
 };

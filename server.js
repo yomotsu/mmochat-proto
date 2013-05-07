@@ -16,7 +16,7 @@ io.sockets.on('connection', function (socket) {
       motion   : arraivalAvatarData.motion,
       inputTimeout : arraivalAvatarData.inputTimeout
     };
-    io.sockets.socket( socket.id ).emit( 'server_myId', socket.id );
+    io.sockets.socket( socket.id ).emit( 'server_myId', { myID : socket.id, players : players } );
     socket.broadcast.emit( 'server_newComersId', socket.id );
   });
 
@@ -35,6 +35,6 @@ io.sockets.on('connection', function (socket) {
 });
 
 ( function loop () {
-    setTimeout( loop, 3000 );
+    setTimeout( loop, 50 );
     io.sockets.emit( 'syncPush', players );
 } )();
