@@ -13,16 +13,13 @@ app.onInit = function () {
     initThreeScene();
     initCannonWorld();
     addGround( new THREE.Vector3( 0, 0, 0 ) );
-
-    var name = $( 'input[name="nameInput"]' ).val();
-    var texture = $( 'input[name="texture"]:checked' ).val();
-    var playerAvator = new app.Avatar( texture, name, scene, world );
+    var playerAvator = new app.Avatar( app.myData.texture, app.myData.name, scene, world );
     app.player = new app.Player( playerAvator );
     var tpsCamera = new app.TPSCamera(
         app.player,
         camera,
         { rigidObjects : [] }
-    );
+    ) ;
 
     ( function anim () {
         requestAnimationFrame( anim );

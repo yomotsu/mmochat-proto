@@ -32,9 +32,9 @@ app.playersData = {
                 avatar.physicalBody.velocity.x = data.velocity[ 0 ];
                 avatar.physicalBody.velocity.y = data.velocity[ 1 ];
                 avatar.physicalBody.velocity.z = data.velocity[ 2 ];
-                avatar.visualBody.position.x = avatar.physicalBody.position.x|0;
-                avatar.visualBody.position.y = avatar.physicalBody.position.y|0;
-                avatar.visualBody.position.z = avatar.physicalBody.position.z|0;
+                avatar.visualBody.position.x = ( ( avatar.physicalBody.position.x * 100 ) | 0 ) / 100;
+                avatar.visualBody.position.y = avatar.physicalBody.position.y | 0;
+                avatar.visualBody.position.z = ( ( avatar.physicalBody.position.z * 100 ) | 0 ) / 100;
 
                 avatar.visualBody.rotation.y = data.angle;
                 avatar.motion = data.motion;
@@ -42,11 +42,11 @@ app.playersData = {
             };
         };
     },
-    add : function ( id ) {
-        console.log(app.playersData.data)
+    add : function ( id, texture, name ) {
+        console.log( texture )
         app.playersData.avatarList[ id ] = new app.Avatar(
-            'fez1.png',
-            'hello',
+            texture,
+            name,
             scene,
             world
         );
@@ -54,6 +54,7 @@ app.playersData = {
     remove : function ( id ) {
         scene.remove( app.playersData.avatarList[ id ].visualBody );
         world.remove( app.playersData.avatarList[ id ].physicalBody );
+        console.log( app.playersData.data );
         delete app.playersData.avatarList[ id ];
     }
 }

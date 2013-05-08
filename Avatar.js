@@ -4,7 +4,7 @@ var app = app || {};
 
     const PHYSICAL_BODY_HEIGHT = 10;
 
-    app.Avatar = function ( texture, name, threeScene, cannonWorld ) {
+    app.Avatar = function ( textureID, name, threeScene, cannonWorld ) {
         this.visualBody = new THREE.Object3D();
         threeScene.add( this.visualBody );
 
@@ -18,7 +18,7 @@ var app = app || {};
             cannonWorld.add( this.physicalBody );
         }
         this.name = name;
-        this.texture = texture;
+        this.texture = app.Avatar.textures[ textureID ];
         this.parts = {};
         this.motion = 'stand';
 
@@ -253,6 +253,21 @@ this.visualBody.add(sp);
         var texture = new THREE.Texture( canvas );
         texture.needsUpdate = true;
         return texture;
+    };
+
+    app.Avatar.textures = {
+        a : 'avatar/fez_1_pelz.png',
+        b : 'avatar/fez_1_milchica.png',
+        c : 'avatar/fez_2_lumen.png',
+        d : 'avatar/fez_2_atera.png',
+        e : 'avatar/fez_3_eins.png',
+        f : 'avatar/fez_3_zwei.png',
+        g : 'avatar/fez_3_drei.png',
+        h : 'avatar/fez_3_vier.png',
+        i : 'avatar/fez_4_phantom.png',
+        j : 'avatar/fez_4_cinnamon.png',
+        k : 'avatar/fez_4_plum.png',
+        l : 'avatar/fez_0_coward.png'
     };
 
 } )();

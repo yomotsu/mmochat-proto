@@ -3,10 +3,17 @@
 <head>
 <title>Chat</title>
 <style>
+body{
+    margin: 0;
+    padding: 0;
+}
 #ui-initInput{
     position: absolute;
     top:0;
     left:0;
+}
+canvas{
+    display: block;
 }
 </style>
 </head>
@@ -14,8 +21,30 @@
 
 <div id="ui-initInput">
 <input name="nameInput" value="unknown">
-<input type="radio" name="texture" value="fez1.png" checked="checked">
-<input type="radio" name="texture" value="fez_phantom.png">
+<select name="texture">
+    <optgroup>
+        <option value="a">pelz</option>
+        <option value="b">milchica</option>
+    </optgroup>
+    <optgroup>
+        <option value="c">lumen</option>
+        <option value="d">atera</option>
+    </optgroup>
+    <optgroup>
+        <option value="e">eins</option>
+        <option value="f">zwei</option>
+        <option value="g">drei</option>
+        <option value="h">vier</option>
+    </optgroup>
+    <optgroup>
+        <option value="i">phantom</option>
+        <option value="j">cinnamon</option>
+        <option value="k">plum</option>
+    </optgroup>
+    <optgroup>
+        <option value="l">coward</option>
+    </optgroup>
+</select>
 <button id="ui-connect">connect</button>
 </div>
 
@@ -68,13 +97,15 @@ app.myData = {
 <script>
 
 ( function () {
-    var $name = $( 'input[name="nameInput"]' );
-    var $texture = $( 'input[name="texture"]' );
-    var $connect = $( '#ui-connect' );
+    var $uiInput = $( '#ui-initInput' );
+    var $name = $uiInput.find( 'input[name="nameInput"]' );
+    var $texture = $uiInput.find( 'select[name="texture"]' );
+    var $connect = $uiInput.find( '#ui-connect' );
 
     $connect.on( 'click', function () {
         app.myData.name = $name.val();
         app.myData.texture  = $texture.val();
+        $uiInput.remove();
 
         app.onInit();
         app.connect();
